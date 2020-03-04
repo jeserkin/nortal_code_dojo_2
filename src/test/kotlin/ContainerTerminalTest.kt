@@ -8,7 +8,7 @@ class ContainerTerminalTest {
 
     @Test
     fun `getFreeSpots returns 900 If Nothing Stored`() {
-        val freeSpots = ContainerTerminal().getFreeSpots()
+        val freeSpots = ContainerTerminal().getFreeSlots()
 
         assertThat(freeSpots).isEqualTo(900)
     }
@@ -20,7 +20,7 @@ class ContainerTerminalTest {
         val container = Container()
 
         containerTerminal.storeContainer(container)
-        val freeSpots = containerTerminal.getFreeSpots()
+        val freeSpots = containerTerminal.getFreeSlots()
 
         assertThat(freeSpots).isEqualTo(899)
     }
@@ -35,7 +35,7 @@ class ContainerTerminalTest {
         val bill = containerTerminal.removeContainer(container.id)
 
         assertThat(bill).isEqualTo(Bill(containerId = container.id, cost = 100))
-        assertThat(containerTerminal.getFreeSpots()).isEqualTo(900)
+        assertThat(containerTerminal.getFreeSlots()).isEqualTo(900)
     }
 
     @Test
@@ -48,6 +48,7 @@ class ContainerTerminalTest {
         val bill = containerTerminal.removeContainer(container.id)
 
         assertThat(bill).isEqualTo(Bill(containerId = container.id, cost = 200))
-        assertThat(containerTerminal.getFreeSpots()).isEqualTo(900)
+        assertThat(containerTerminal.getFreeSlots()).isEqualTo(900)
     }
+
 }

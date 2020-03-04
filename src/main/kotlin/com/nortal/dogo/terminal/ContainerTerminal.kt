@@ -1,27 +1,48 @@
 package com.nortal.dogo.terminal
 
 import java.time.Clock
+import java.time.Duration
+import java.time.LocalDateTime
 import java.util.*
 
-class ContainerTerminal(clock: Clock = Clock.systemDefaultZone()) {
+class ContainerTerminal(private val clock: Clock = Clock.systemDefaultZone()) {
 
-    private val slots: Array<Array<Container?>> = Array(30) { Array<Container?>(30) { null } }
+    companion object {
+        private const val PRICE_PER_DAY = 100
+    }
 
-    fun getFreeSpots(): Int {
-        return 900 - slots.sumBy { it.count { container -> container != null } };
+    private val slots = Array(30) { Array<ContainerSlot?>(30) { null } }
+
+    fun getFreeSlots(): Int {
+        return 900 - slots.sumBy { it.count { containerSlot -> containerSlot != null } };
     }
 
     fun storeContainer(container: Container) {
-        slots[0][0] = container
+        slots[0][0] = ContainerSlot(container = container, addedTime = LocalDateTime.now(clock))
     }
 
     fun removeContainer(id: UUID): Bill {
-        slots.forEachIndexed { row, arrayOfContainers ->
-            arrayOfContainers.forEachIndexed { index, container ->
-                if (container?.id == id) { slots[row][index] = null }
+        var removedSlot: ContainerSlot? = null
+        slots.forEachIndexed { row, arrayOfContainerSlots ->
+            arrayOfContainerSlots.forEachIndexed { index, containerSlot ->
+                if (containerSlot?.container?.id == id) {
+                    removedSlot = containerSlot
+                    slots[row][index] = null
+                }
             }
         }
-        return Bill(containerId = id, cost = 100)
+
+        return removedSlot?.let { calculateBill(it) } ?: throw IllegalArgumentException(id.toString())
+    }
+
+    private fun calculateBill(containerSlot: ContainerSlot): Bill {
+        var days = Duration.between(LocalDateTime.now(clock), containerSlot.addedTime).toDays()
+
+        if (days == 0L) {
+            days = 1L
+        }
+
+        return Bill(containerId = containerSlot.container.id, cost = days * PRICE_PER_DAY)
     }
 
 }
