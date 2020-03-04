@@ -4,6 +4,7 @@ import java.time.Clock
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.math.absoluteValue
 
 class ContainerTerminal(private val clock: Clock = Clock.systemDefaultZone()) {
 
@@ -36,12 +37,11 @@ class ContainerTerminal(private val clock: Clock = Clock.systemDefaultZone()) {
     }
 
     private fun calculateBill(containerSlot: ContainerSlot): Bill {
-        var days = Duration.between(LocalDateTime.now(clock), containerSlot.addedTime).toDays()
-
+        val hours = Duration.between(LocalDateTime.now(clock), containerSlot.addedTime).toHours().absoluteValue
+        var days = kotlin.math.ceil(hours / 24.0).toLong()
         if (days == 0L) {
             days = 1L
         }
-
         return Bill(containerId = containerSlot.container.id, cost = days * PRICE_PER_DAY)
     }
 
