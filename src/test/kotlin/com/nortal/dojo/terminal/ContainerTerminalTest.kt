@@ -1,8 +1,7 @@
+package com.nortal.dojo.terminal
+
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import com.nortal.dogo.terminal.Bill
-import com.nortal.dogo.terminal.Container
-import com.nortal.dogo.terminal.ContainerTerminal
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.Clock
@@ -40,7 +39,12 @@ class ContainerTerminalTest {
 
         val bill = containerTerminal.removeContainer(container.id)
 
-        assertThat(bill).isEqualTo(Bill(containerId = container.id, cost = 100))
+        assertThat(bill).isEqualTo(
+            Bill(
+                containerId = container.id,
+                cost = 100
+            )
+        )
         assertThat(containerTerminal.getFreeSlots()).isEqualTo(900)
     }
 
@@ -58,7 +62,12 @@ class ContainerTerminalTest {
 
         val bill = containerTerminal.removeContainer(container.id)
 
-        assertThat(bill).isEqualTo(Bill(containerId = container.id, cost = 200))
+        assertThat(bill).isEqualTo(
+            Bill(
+                containerId = container.id,
+                cost = 200
+            )
+        )
         assertThat(containerTerminal.getFreeSlots()).isEqualTo(900)
     }
 

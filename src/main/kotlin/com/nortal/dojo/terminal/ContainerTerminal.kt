@@ -1,4 +1,4 @@
-package com.nortal.dogo.terminal
+package com.nortal.dojo.terminal
 
 import java.time.Clock
 import java.time.Duration
@@ -15,11 +15,14 @@ class ContainerTerminal(private val clock: Clock = Clock.systemDefaultZone()) {
     private val slots = Array(30) { Array<ContainerSlot?>(30) { null } }
 
     fun getFreeSlots(): Int {
-        return 900 - slots.sumBy { it.count { containerSlot -> containerSlot != null } };
+        return 900 - slots.sumBy { it.count { containerSlot -> containerSlot != null } }
     }
 
     fun storeContainer(container: Container) {
-        slots[0][0] = ContainerSlot(container = container, addedTime = LocalDateTime.now(clock))
+        slots[0][0] = ContainerSlot(
+            container = container,
+            addedTime = LocalDateTime.now(clock)
+        )
     }
 
     fun removeContainer(id: UUID): Bill {
@@ -42,7 +45,10 @@ class ContainerTerminal(private val clock: Clock = Clock.systemDefaultZone()) {
         if (days == 0L) {
             days = 1L
         }
-        return Bill(containerId = containerSlot.container.id, cost = days * PRICE_PER_DAY)
+        return Bill(
+            containerId = containerSlot.container.id,
+            cost = days * PRICE_PER_DAY
+        )
     }
 
 }

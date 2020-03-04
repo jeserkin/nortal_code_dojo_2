@@ -1,4 +1,4 @@
-package com.nortal.dogo.terminal
+package com.nortal.dojo.terminal
 
 import java.util.*
 
